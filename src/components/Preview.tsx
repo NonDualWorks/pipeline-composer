@@ -1,6 +1,7 @@
 // Preview pane — renders pipeline animation
 // Mounts the DOM renderer + GSAP engine inside a React ref.
 // Debounces re-render to avoid animation restart on every keystroke.
+// Wires startAnim to pv:ready event (render is async via rAF).
 
 import { useRef, useEffect, useCallback } from 'react'
 import { useStore } from '../store'
@@ -39,7 +40,16 @@ export function Preview() {
     tl.timeScale(useStore.getState().speed).play()
   }, [])
 
-  // Debounced render: waits 400ms after last pipeline change before re-rendering
+  // Listen for pv:ready event (fired after two-phase render completes)
+  useEffect(() => {
+    const host = hostRef.current
+    if (!host) return
+    const handleReady = () => startAnim()
+    host.addEventListener('pv:ready', handleReady)
+    return () => host.removeEventListener('pv:ready', handleReady)
+  }, [startAnim])
+
+  // Debounced render: waits 400ms after last pipeline change
   useEffect(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current)
     debounceRef.current = setTimeout(() => {
@@ -50,9 +60,8 @@ export function Preview() {
         compRef.current = createPipelineComponent(host)
       }
 
-      const comp = compRef.current
-      comp.render(pipeline)
-      startAnim()
+      compRef.current.render(pipeline)
+      // pv:ready event triggers startAnim after layout completes
     }, 400)
 
     return () => {
