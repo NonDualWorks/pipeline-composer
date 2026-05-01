@@ -35,7 +35,7 @@ export function Preview() {
     tl.timeScale(useStore.getState().speed).play()
   }, [])
 
-  // Render pipeline when data changes
+  // Render pipeline and start animation when data changes
   useEffect(() => {
     const host = hostRef.current
     if (!host) return
@@ -46,17 +46,13 @@ export function Preview() {
 
     const comp = compRef.current
     comp.render(pipeline)
-    // pv:ready fires from render(), which triggers startAnim
-  }, [pipeline])
+    // Start animation directly after render (don't rely on pv:ready event timing)
+    startAnim()
 
-  // Listen for pv:ready to start animation
-  useEffect(() => {
-    const host = hostRef.current
-    if (!host) return
-    const handler = () => startAnim()
-    host.addEventListener('pv:ready', handler)
-    return () => host.removeEventListener('pv:ready', handler)
-  }, [startAnim])
+    return () => {
+      tlRef.current?.kill()
+    }
+  }, [pipeline, startAnim])
 
   // Update speed when it changes
   useEffect(() => {
@@ -73,14 +69,14 @@ export function Preview() {
 
   const speedPresets = [
     { label: 'fast', value: 0.4 },
-    { label: '1×', value: 1.0 },
+    { label: '1\u00D7', value: 1.0 },
     { label: 'slow', value: 2.5 },
   ]
 
   return (
     <div className="preview-pane">
       <div className="preview-controls">
-        <button className="btn" onClick={handleReplay}>↻ replay</button>
+        <button className="btn" onClick={handleReplay}>{'\u21BB'} replay</button>
 
         <div className="ctrl-group">
           <span className="ctrl-lbl">speed</span>
@@ -93,7 +89,7 @@ export function Preview() {
             value={speed}
             onChange={handleSpeedChange}
           />
-          <span className="spd-val">{speed.toFixed(1)}×</span>
+          <span className="spd-val">{speed.toFixed(1)}{'\u00D7'}</span>
         </div>
 
         <div className="pill-grp">
