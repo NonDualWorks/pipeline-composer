@@ -4,6 +4,8 @@
 import { Preview } from './components/Preview'
 import { JobList } from './components/JobList'
 import { JobInspector } from './components/JobInspector'
+import { ZoneEditor } from './components/ZoneEditor'
+import { PipelineSelector } from './components/PipelineSelector'
 
 export default function App() {
   return (
@@ -14,11 +16,13 @@ export default function App() {
           <span className="nav-title">pipeline-composer</span>
           <span className="nav-badge">v0.1</span>
         </div>
+        <PipelineSelector />
       </nav>
 
       <div className="app-layout">
         <aside className="sidebar">
           <JobList />
+          <ZoneEditor />
           <JobInspector />
         </aside>
         <main className="main-preview">

@@ -10,6 +10,7 @@ const RESOURCE_TYPES: ResourceType[] = ['git', 'image', 's3', 'semver', 'notify'
 export function JobInspector() {
   const selectedJobId = useStore(s => s.selectedJobId)
   const jobs = useStore(s => s.pipeline.jobs)
+  const zones = useStore(s => s.pipeline.zones)
   const updateJob = useStore(s => s.updateJob)
 
   const job = jobs.find(j => j.id === selectedJobId)
@@ -112,6 +113,16 @@ export function JobInspector() {
       </div>
 
       <div className="inspector-section">
+        <label className="inspector-label">Fan-out Group</label>
+        <input
+          className="inspector-input"
+          value={job.fanOutGroup || ''}
+          onChange={e => update({ fanOutGroup: e.target.value || null })}
+          placeholder="none"
+        />
+      </div>
+
+      <div className="inspector-section">
         <label className="inspector-label">Gate</label>
         <select
           className="inspector-select"
@@ -157,6 +168,39 @@ export function JobInspector() {
         )}
       </div>
 
+      {zones.length > 0 && (
+        <div className="inspector-section">
+          <label className="inspector-label">Zone</label>
+          <select
+            className="inspector-select"
+            value={job.zone || ''}
+            onChange={e => update({ zone: e.target.value || null })}
+          >
+            <option value="">none</option>
+            {zones.map(z => (
+              <option key={z.id} value={z.id}>{z.label}</option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      <div className="inspector-section">
+        <label className="inspector-label">Failure Simulation</label>
+        <select
+          className="inspector-select"
+          value={job.failAtStep === null ? 'none' : String(job.failAtStep)}
+          onChange={e => {
+            const v = e.target.value
+            update({ failAtStep: v === 'none' ? null : parseInt(v) })
+          }}
+        >
+          <option value="none">no failure</option>
+          {job.steps.map((step, si) => (
+            <option key={si} value={si}>fail at: {step.label} (step {si})</option>
+          ))}
+        </select>
+      </div>
+
       <div className="inspector-section">
         <div className="inspector-row">
           <label className="inspector-label">Steps ({job.steps.length})</label>
@@ -186,7 +230,7 @@ export function JobInspector() {
                 value={step.label}
                 onChange={e => handleUpdateStep(si, { label: e.target.value })}
               />
-              <button className="step-remove" onClick={() => handleRemoveStep(si)}>×</button>
+              <button className="step-remove" onClick={() => handleRemoveStep(si)}>{'\u00D7'}</button>
             </div>
           ))}
         </div>

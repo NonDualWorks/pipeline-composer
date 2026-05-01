@@ -6,6 +6,7 @@ import { useRef, useEffect, useCallback } from 'react'
 import { useStore } from '../store'
 import { createPipelineComponent, buildTimeline } from '../engine'
 import type { PipelineComponent } from '../engine'
+import { ScenarioSelector } from './ScenarioSelector'
 
 export function Preview() {
   const hostRef = useRef<HTMLDivElement>(null)
@@ -113,6 +114,8 @@ export function Preview() {
           ))}
         </div>
       </div>
+
+      <ScenarioSelector />
 
       <div className="pl-wrap" ref={hostRef} />
     </div>

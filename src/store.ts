@@ -24,6 +24,10 @@ interface ComposerState {
 
   // Pipeline metadata
   updatePipelineMeta: (patch: Partial<Pick<Pipeline, 'name' | 'team' | 'color'>>) => void
+
+  // Zone mutations
+  addZone: (id: string, label: string, color: string) => void
+  removeZone: (id: string) => void
 }
 
 let jobCounter = 1
@@ -79,6 +83,18 @@ export const useStore = create<ComposerState>((set) => ({
 
   updatePipelineMeta: (patch) => set(s => ({
     pipeline: { ...s.pipeline, ...patch },
+  })),
+
+  addZone: (id, label, color) => set(s => ({
+    pipeline: { ...s.pipeline, zones: [...s.pipeline.zones, { id, label, color }] },
+  })),
+
+  removeZone: (id) => set(s => ({
+    pipeline: {
+      ...s.pipeline,
+      zones: s.pipeline.zones.filter(z => z.id !== id),
+      jobs: s.pipeline.jobs.map(j => j.zone === id ? { ...j, zone: null } : j),
+    },
   })),
 }))
 
