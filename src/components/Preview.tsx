@@ -7,6 +7,7 @@ import { useStore } from '../store'
 import { createPipelineComponent, buildTimeline } from '../engine'
 import type { PipelineComponent } from '../engine'
 import { ScenarioSelector } from './ScenarioSelector'
+import { ShareExport } from './ShareExport'
 
 export function Preview() {
   const hostRef = useRef<HTMLDivElement>(null)
@@ -118,6 +119,8 @@ export function Preview() {
       <ScenarioSelector />
 
       <div className="pl-wrap" ref={hostRef} />
+
+      <ShareExport />
     </div>
   )
 }

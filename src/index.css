@@ -211,6 +211,13 @@ body {
 /* ─── Pipeline selector (nav) ─── */
 .pipeline-selector { display: flex; align-items: center; gap: 6px; }
 
+/* ─── Share & Export ─── */
+.share-export { display: flex; flex-direction: column; gap: 8px; }
+.share-export-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.yaml-preview { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.yaml-header { display: flex; justify-content: space-between; align-items: center; padding: 8px 14px; background: var(--surface-high); border-bottom: 1px solid var(--border); }
+.yaml-code { padding: 14px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); overflow-x: auto; max-height: 300px; overflow-y: auto; white-space: pre; margin: 0; }
+
 /* Animations */
 @keyframes pv-spin { to { transform: rotate(360deg); } }
 @keyframes pv-pulse { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
