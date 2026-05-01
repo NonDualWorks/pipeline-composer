@@ -7,8 +7,10 @@ import { JobInspector } from './components/JobInspector'
 import { ZoneEditor } from './components/ZoneEditor'
 import { PipelineSelector } from './components/PipelineSelector'
 import { useStore } from './store'
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 
 export default function App() {
+  useKeyboardShortcuts()
   return (
     <div className="app">
       <nav className="nav">
