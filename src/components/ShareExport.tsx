@@ -2,6 +2,7 @@
 import { useRef, useState } from 'react'
 import { useStore } from '../store'
 import { getShareUrl, downloadJSON, exportConcourseYAML, importPipelineJSON } from '../share'
+import { downloadJSONSchema } from '../json-schema'
 
 export function ShareExport() {
   const pipeline = useStore(s => s.pipeline)
@@ -58,6 +59,9 @@ export function ShareExport() {
         </button>
         <button className="btn" onClick={handleExportYAML}>
           {yamlVisible ? '\u2715 close' : '\u2B07'} concourse.yml
+        </button>
+        <button className="btn" onClick={downloadJSONSchema}>
+          {'\u2B07'} schema.json
         </button>
         <button className="btn" onClick={() => fileRef.current?.click()}>
           {'\u2B06'} import .json
