@@ -165,35 +165,35 @@ body {
 .step-remove { background: none; border: none; color: var(--subtle); font-size: 14px; cursor: pointer; padding: 2px 4px; border-radius: 3px; }
 .step-remove:hover { color: var(--danger); }
 
-/* ─── Pipeline viz component styles (from shared.css) ─── */
+/* ─── Pipeline viz component styles (scaled up from demo) ─── */
 .pv-root { font-family: var(--font-mono); }
-.pv-header { padding: 7px 14px; background: var(--surface-high); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 6px; }
-.pv-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-.pv-team { font-size: 10px; font-weight: 600; color: var(--text); }
-.pv-sep { font-size: 10px; color: var(--subtle); }
-.pv-name { font-size: 10px; color: var(--muted); }
-.pv-svg-scroll { overflow-x: auto; padding: 16px; }
+.pv-header { padding: 10px 18px; background: var(--surface-high); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+.pv-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.pv-team { font-size: 13px; font-weight: 600; color: var(--text); }
+.pv-sep { font-size: 13px; color: var(--subtle); }
+.pv-name { font-size: 13px; color: var(--muted); }
+.pv-svg-scroll { overflow-x: auto; padding: 20px; }
 .pv-svg-scroll svg { display: block; overflow: visible; }
 
-/* Job boxes */
-.job-box { border: 2px solid #3d3d3d; border-radius: 5px; overflow: hidden; background: var(--surface); transition: border-color .3s; }
-.job-header { padding: 4px 8px; background: rgba(0,0,0,.2); border-bottom: 1px solid rgba(255,255,255,.05); display: flex; align-items: center; gap: 5px; transition: background .3s; }
-.state-wrap { width: 10px; height: 10px; position: relative; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-.s-dot-j { width: 7px; height: 7px; border-radius: 2px; background: #3d3d3d; transition: background .3s, border-radius .2s; }
-.spinner-j { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid rgba(245,166,35,.25); border-top-color: #f5a623; position: absolute; opacity: 0; animation: pv-spin .7s linear infinite; }
-.job-name-j { font-size: 10px; font-weight: 600; color: #71717a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90px; transition: color .3s; }
-.job-steps-j { padding: 4px 6px; display: flex; flex-direction: column; gap: 1px; }
-.step-row-j { display: flex; align-items: center; gap: 4px; padding: 2px 3px; border-radius: 3px; opacity: .25; transition: opacity .2s, background .2s; }
-.rc-dot-j { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-.t-dot-j { width: 5px; height: 5px; border-radius: 1px; background: #3d3d3d; flex-shrink: 0; margin: 1px; }
-.g-dot-j { width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid #fbbf24; background: transparent; flex-shrink: 0; }
-.step-lbl-j { font-size: 8px; color: #71717a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 96px; transition: color .2s; }
+/* Job boxes — scaled up */
+.job-box { border: 2px solid #3d3d3d; border-radius: 6px; overflow: hidden; background: var(--surface); transition: border-color .3s; }
+.job-header { padding: 6px 10px; background: rgba(0,0,0,.2); border-bottom: 1px solid rgba(255,255,255,.05); display: flex; align-items: center; gap: 6px; transition: background .3s; }
+.state-wrap { width: 14px; height: 14px; position: relative; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.s-dot-j { width: 9px; height: 9px; border-radius: 2px; background: #3d3d3d; transition: background .3s, border-radius .2s; }
+.spinner-j { width: 12px; height: 12px; border-radius: 50%; border: 2px solid rgba(245,166,35,.25); border-top-color: #f5a623; position: absolute; opacity: 0; animation: pv-spin .7s linear infinite; }
+.job-name-j { font-size: 13px; font-weight: 600; color: #71717a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; transition: color .3s; }
+.job-steps-j { padding: 5px 8px; display: flex; flex-direction: column; gap: 2px; }
+.step-row-j { display: flex; align-items: center; gap: 5px; padding: 3px 4px; border-radius: 3px; opacity: .25; transition: opacity .2s, background .2s; }
+.rc-dot-j { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.t-dot-j { width: 7px; height: 7px; border-radius: 2px; background: #3d3d3d; flex-shrink: 0; margin: 1px; }
+.g-dot-j { width: 9px; height: 9px; border-radius: 50%; border: 2px solid #fbbf24; background: transparent; flex-shrink: 0; }
+.step-lbl-j { font-size: 11px; color: #71717a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px; transition: color .2s; }
 
-/* Legend */
-.pv-legend { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 6px 14px; background: var(--surface-high); border-top: 1px solid var(--border); font-size: 9px; }
+/* Legend — scaled up */
+.pv-legend { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 8px 18px; background: var(--surface-high); border-top: 1px solid var(--border); font-size: 11px; }
 .leg-t { color: var(--subtle); text-transform: uppercase; letter-spacing: .06em; }
-.leg-i { display: flex; align-items: center; gap: 4px; }
-.leg-d { width: 7px; height: 7px; border-radius: 2px; }
+.leg-i { display: flex; align-items: center; gap: 5px; }
+.leg-d { width: 9px; height: 9px; border-radius: 2px; }
 .leg-d.rnd { border-radius: 50%; }
 .leg-i span { color: var(--subtle); }
 

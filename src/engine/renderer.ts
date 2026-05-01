@@ -11,12 +11,12 @@ const GATE_ICONS: Record<string, string> = {
   manual: '\uD83D\uDD12',
 }
 
-// Layout constants
-const JW = 134, STEP_H = 11, JH_BASE = 20, JH_MIN = 44
-const CGAP = 64, RGAP = 18, RC = 6, PX = 36, PY = 28
+// Layout constants — scaled up from demo page sizes
+const JW = 180, STEP_H = 18, JH_BASE = 32, JH_MIN = 56
+const CGAP = 72, RGAP = 24, RC = 8, PX = 44, PY = 36
 
 function jh(j: Job): number {
-  return Math.max(JH_MIN, JH_BASE + (j.steps?.length || 0) * STEP_H + 4)
+  return Math.max(JH_MIN, JH_BASE + (j.steps?.length || 0) * STEP_H + 8)
 }
 
 export interface PipelineComponent {
@@ -215,9 +215,9 @@ function buildHTML(data: Pipeline): string {
       const x1 = colX(range.first) - 10
       const x2 = colX(range.last) + JW + 10
       const zw = x2 - x1
-      zoneSVG += `<rect x="${x1}" y="3" width="${zw}" height="20" rx="4" fill="${zone.color}" opacity="0.06"/>`
-      zoneSVG += `<line x1="${x1}" y1="23" x2="${x2}" y2="23" stroke="${zone.color}" stroke-width="1.5" opacity="0.4"/>`
-      zoneSVG += `<text x="${x1 + 8}" y="16" font-size="8" font-family="JetBrains Mono,monospace" fill="${zone.color}" font-weight="600" letter-spacing="0.5" opacity="0.8">${zone.label.toUpperCase()}</text>`
+      zoneSVG += `<rect x="${x1}" y="3" width="${zw}" height="24" rx="5" fill="${zone.color}" opacity="0.06"/>`
+      zoneSVG += `<line x1="${x1}" y1="27" x2="${x2}" y2="27" stroke="${zone.color}" stroke-width="1.5" opacity="0.4"/>`
+      zoneSVG += `<text x="${x1 + 10}" y="19" font-size="11" font-family="JetBrains Mono,monospace" fill="${zone.color}" font-weight="600" letter-spacing="0.5" opacity="0.8">${zone.label.toUpperCase()}</text>`
     })
   }
 
@@ -232,17 +232,17 @@ function buildHTML(data: Pipeline): string {
       </div>
     </foreignObject>`
     if (job.parallelGroup && job.row === 0) {
-      foSVG += `<text x="${x + JW / 2}" y="${y - 8}" text-anchor="middle" font-size="7" font-family="JetBrains Mono,monospace" fill="#71717a" letter-spacing="1">PARALLEL</text>`
+      foSVG += `<text x="${x + JW / 2}" y="${y - 10}" text-anchor="middle" font-size="10" font-family="JetBrains Mono,monospace" fill="#71717a" letter-spacing="1">PARALLEL</text>`
     }
     if (job.fanOutGroup && job.row === 0) {
-      foSVG += `<text x="${x + JW / 2}" y="${y - 8}" text-anchor="middle" font-size="7" font-family="JetBrains Mono,monospace" fill="#a78bfa" letter-spacing="1">FAN-OUT</text>`
+      foSVG += `<text x="${x + JW / 2}" y="${y - 10}" text-anchor="middle" font-size="10" font-family="JetBrains Mono,monospace" fill="#a78bfa" letter-spacing="1">FAN-OUT</text>`
     }
     if (job.gate && !job.parallelGroup) {
       if (job.gateActor) {
-        foSVG += `<text x="${x + JW / 2}" y="${y - 8}" text-anchor="middle" font-size="7" font-family="JetBrains Mono,monospace" fill="${job.gateActorColor || '#fbbf24'}" letter-spacing="1">\u{1F464} ${job.gateActor.toUpperCase()}</text>`
+        foSVG += `<text x="${x + JW / 2}" y="${y - 10}" text-anchor="middle" font-size="10" font-family="JetBrains Mono,monospace" fill="${job.gateActorColor || '#fbbf24'}" letter-spacing="1">\u{1F464} ${job.gateActor.toUpperCase()}</text>`
       } else {
         const icon = GATE_ICONS[job.gate] || '\u23F8'
-        foSVG += `<text x="${x + JW / 2}" y="${y - 8}" text-anchor="middle" font-size="7" font-family="JetBrains Mono,monospace" fill="#fbbf24" letter-spacing="1">${icon} ${job.gate.toUpperCase()}</text>`
+        foSVG += `<text x="${x + JW / 2}" y="${y - 10}" text-anchor="middle" font-size="10" font-family="JetBrains Mono,monospace" fill="#fbbf24" letter-spacing="1">${icon} ${job.gate.toUpperCase()}</text>`
       }
     }
   })
