@@ -1,5 +1,6 @@
 // Preview pane — renders pipeline animation
 // Mounts the DOM renderer + GSAP engine inside a React ref.
+// Debounces re-render to avoid animation restart on every keystroke.
 
 import { useRef, useEffect, useCallback } from 'react'
 import { useStore } from '../store'
@@ -10,6 +11,7 @@ export function Preview() {
   const hostRef = useRef<HTMLDivElement>(null)
   const compRef = useRef<PipelineComponent | null>(null)
   const tlRef = useRef<gsap.core.Timeline | null>(null)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const pipeline = useStore(s => s.pipeline)
   const speed = useStore(s => s.speed)
   const setSpeed = useStore(s => s.setSpeed)
@@ -35,24 +37,31 @@ export function Preview() {
     tl.timeScale(useStore.getState().speed).play()
   }, [])
 
-  // Render pipeline and start animation when data changes
+  // Debounced render: waits 400ms after last pipeline change before re-rendering
   useEffect(() => {
-    const host = hostRef.current
-    if (!host) return
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(() => {
+      const host = hostRef.current
+      if (!host) return
 
-    if (!compRef.current) {
-      compRef.current = createPipelineComponent(host)
-    }
+      if (!compRef.current) {
+        compRef.current = createPipelineComponent(host)
+      }
 
-    const comp = compRef.current
-    comp.render(pipeline)
-    // Start animation directly after render (don't rely on pv:ready event timing)
-    startAnim()
+      const comp = compRef.current
+      comp.render(pipeline)
+      startAnim()
+    }, 400)
 
     return () => {
-      tlRef.current?.kill()
+      if (debounceRef.current) clearTimeout(debounceRef.current)
     }
   }, [pipeline, startAnim])
+
+  // Cleanup timeline on unmount
+  useEffect(() => {
+    return () => { tlRef.current?.kill() }
+  }, [])
 
   // Update speed when it changes
   useEffect(() => {
