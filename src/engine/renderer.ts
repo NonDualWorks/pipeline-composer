@@ -12,11 +12,12 @@ const GATE_ICONS: Record<string, string> = {
 }
 
 // Layout constants — scaled up from demo page sizes
-const JW = 180, STEP_H = 18, JH_BASE = 32, JH_MIN = 56
+// Height budget: header ~28px, steps-container padding 10px, per step ~20px (row 16px + gap 2px + padding 2px)
+const JW = 180, STEP_H = 20, JH_BASE = 42, JH_MIN = 56
 const CGAP = 72, RGAP = 24, RC = 8, PX = 44, PY = 36
 
 function jh(j: Job): number {
-  return Math.max(JH_MIN, JH_BASE + (j.steps?.length || 0) * STEP_H + 8)
+  return Math.max(JH_MIN, JH_BASE + (j.steps?.length || 0) * STEP_H + 4)
 }
 
 export interface PipelineComponent {
