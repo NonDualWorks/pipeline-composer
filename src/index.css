@@ -1,0 +1,202 @@
+/* Pipeline Composer — global styles
+   Design tokens from waypoint design system + pipeline-viz shared.css */
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #09090b;
+  --surface: #18181b;
+  --surface-high: #27272a;
+  --border: rgba(255,255,255,0.08);
+  --text: #f4f4f5;
+  --muted: #a1a1aa;
+  --subtle: #71717a;
+  --accent: #10b981;
+  --accent-dim: rgba(16,185,129,0.12);
+  --danger: #ed4b35;
+  --font-sans: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --shadow: 0 0 0 1px rgba(255,255,255,0.05), 0 4px 6px -1px rgba(0,0,0,0.5), 0 20px 40px -8px rgba(0,0,0,0.6);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Nav ─── */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(9,9,11,.9); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px; height: 52px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-left { display: flex; align-items: center; gap: 10px; }
+.nav-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+.nav-title { font-size: 15px; font-weight: 600; letter-spacing: -.02em; }
+.nav-badge { font-size: 11px; font-family: var(--font-mono); background: var(--surface-high); border: 1px solid var(--border); padding: 2px 10px; border-radius: 4px; color: var(--subtle); }
+
+/* ─── App layout ─── */
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+.app-layout { display: flex; flex: 1; overflow: hidden; }
+
+.sidebar {
+  width: 320px; min-width: 320px;
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  overflow-y: auto;
+  background: var(--surface);
+}
+
+.main-preview {
+  flex: 1;
+  overflow: auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ─── Preview pane ─── */
+.preview-pane { display: flex; flex-direction: column; gap: 12px; }
+.preview-controls {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  padding: 10px 16px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+}
+
+/* ─── Pipeline viz wrapper (engine renders here) ─── */
+.pl-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+/* ─── Controls ─── */
+.ctrl-group { display: flex; align-items: center; gap: 8px; }
+.ctrl-lbl { font-size: 10px; font-family: var(--font-mono); color: var(--subtle); text-transform: uppercase; letter-spacing: .06em; }
+.pill-grp { display: flex; gap: 2px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 2px; }
+.pill { font-size: 11px; font-family: var(--font-mono); padding: 4px 10px; border-radius: 4px; border: 1px solid transparent; cursor: pointer; background: transparent; color: var(--subtle); transition: all .15s; }
+.pill.on { background: var(--surface); border-color: var(--border); color: var(--accent); }
+.pill:hover:not(.on) { color: var(--text); }
+.btn { font-size: 11px; font-family: var(--font-mono); color: var(--muted); background: var(--surface-high); border: 1px solid var(--border); padding: 5px 12px; border-radius: 6px; cursor: pointer; transition: all .15s; }
+.btn:hover { color: var(--text); }
+.btn-sm { font-size: 10px; padding: 3px 8px; }
+.spd-slider { -webkit-appearance: none; appearance: none; width: 110px; height: 4px; border-radius: 2px; background: linear-gradient(to right, var(--accent) 0%, var(--accent) 50%, var(--surface-high) 50%); outline: none; cursor: pointer; }
+.spd-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); cursor: pointer; box-shadow: 0 0 4px rgba(16,185,129,.5); }
+.spd-val { font-size: 11px; font-family: var(--font-mono); color: var(--accent); min-width: 30px; }
+
+/* ─── Job list pane ─── */
+.job-list-pane { display: flex; flex-direction: column; border-bottom: 1px solid var(--border); }
+.job-list-header { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+.pipeline-meta { display: flex; align-items: center; gap: 4px; }
+.meta-input {
+  background: transparent; border: 1px solid transparent; color: var(--text);
+  font-family: var(--font-mono); font-size: 12px; padding: 4px 6px; border-radius: 4px;
+  outline: none; transition: border-color .15s;
+}
+.meta-input:focus { border-color: var(--accent); }
+.meta-team { width: 60px; font-weight: 600; }
+.meta-name { flex: 1; color: var(--muted); }
+.meta-sep { color: var(--subtle); font-size: 12px; }
+.meta-color { width: 24px; height: 24px; border: none; border-radius: 4px; cursor: pointer; padding: 0; background: transparent; }
+.meta-color::-webkit-color-swatch-wrapper { padding: 0; }
+.meta-color::-webkit-color-swatch { border: 1px solid var(--border); border-radius: 4px; }
+
+.job-list-label {
+  padding: 8px 16px; display: flex; justify-content: space-between; align-items: center;
+  font-size: 10px; font-family: var(--font-mono); color: var(--subtle); text-transform: uppercase; letter-spacing: .06em;
+}
+.job-list-items { display: flex; flex-direction: column; max-height: 300px; overflow-y: auto; }
+.job-list-item {
+  padding: 8px 16px; display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; transition: background .1s; border-left: 2px solid transparent;
+}
+.job-list-item:hover { background: rgba(255,255,255,0.02); }
+.job-list-item.selected { background: var(--accent-dim); border-left-color: var(--accent); }
+.job-list-item-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.job-list-item-name { font-size: 12px; font-family: var(--font-mono); font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.job-list-item-meta { font-size: 10px; font-family: var(--font-mono); color: var(--subtle); }
+.job-list-item-remove { background: none; border: none; color: var(--subtle); font-size: 16px; cursor: pointer; padding: 2px 6px; border-radius: 3px; line-height: 1; }
+.job-list-item-remove:hover { color: var(--danger); background: rgba(237,75,53,0.1); }
+
+/* ─── Inspector pane ─── */
+.inspector-pane { flex: 1; overflow-y: auto; padding: 12px 16px; display: flex; flex-direction: column; gap: 14px; }
+.inspector-empty { font-size: 12px; color: var(--subtle); font-family: var(--font-mono); padding: 20px 0; text-align: center; }
+.inspector-section { display: flex; flex-direction: column; gap: 6px; }
+.inspector-label { font-size: 10px; font-family: var(--font-mono); color: var(--subtle); text-transform: uppercase; letter-spacing: .06em; }
+.inspector-input {
+  background: var(--bg); border: 1px solid var(--border); color: var(--text);
+  font-family: var(--font-mono); font-size: 12px; padding: 6px 10px; border-radius: 6px;
+  outline: none; transition: border-color .15s;
+}
+.inspector-input:focus { border-color: var(--accent); }
+.inspector-input-sm { padding: 4px 6px; font-size: 11px; }
+.inspector-select {
+  background: var(--bg); border: 1px solid var(--border); color: var(--text);
+  font-family: var(--font-mono); font-size: 12px; padding: 6px 10px; border-radius: 6px;
+  outline: none; cursor: pointer;
+}
+.inspector-select-sm { padding: 4px 6px; font-size: 11px; }
+.inspector-row { display: flex; justify-content: space-between; align-items: center; }
+.inspector-sub { margin-top: 6px; display: flex; flex-direction: column; gap: 4px; padding-left: 10px; border-left: 2px solid var(--border); }
+.inspector-hint { font-size: 11px; color: var(--subtle); font-style: italic; }
+
+/* ─── Dep checkboxes ─── */
+.dep-list { display: flex; flex-direction: column; gap: 4px; }
+.dep-check { display: flex; align-items: center; gap: 6px; font-size: 11px; font-family: var(--font-mono); color: var(--muted); cursor: pointer; }
+.dep-check input { accent-color: var(--accent); }
+
+/* ─── Step editor ─── */
+.step-list { display: flex; flex-direction: column; gap: 4px; }
+.step-edit-row { display: flex; align-items: center; gap: 4px; }
+.step-edit-row .inspector-input-sm { flex: 1; min-width: 0; }
+.step-remove { background: none; border: none; color: var(--subtle); font-size: 14px; cursor: pointer; padding: 2px 4px; border-radius: 3px; }
+.step-remove:hover { color: var(--danger); }
+
+/* ─── Pipeline viz component styles (from shared.css) ─── */
+.pv-root { font-family: var(--font-mono); }
+.pv-header { padding: 7px 14px; background: var(--surface-high); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 6px; }
+.pv-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.pv-team { font-size: 10px; font-weight: 600; color: var(--text); }
+.pv-sep { font-size: 10px; color: var(--subtle); }
+.pv-name { font-size: 10px; color: var(--muted); }
+.pv-svg-scroll { overflow-x: auto; padding: 16px; }
+.pv-svg-scroll svg { display: block; overflow: visible; }
+
+/* Job boxes */
+.job-box { border: 2px solid #3d3d3d; border-radius: 5px; overflow: hidden; background: var(--surface); transition: border-color .3s; }
+.job-header { padding: 4px 8px; background: rgba(0,0,0,.2); border-bottom: 1px solid rgba(255,255,255,.05); display: flex; align-items: center; gap: 5px; transition: background .3s; }
+.state-wrap { width: 10px; height: 10px; position: relative; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+.s-dot-j { width: 7px; height: 7px; border-radius: 2px; background: #3d3d3d; transition: background .3s, border-radius .2s; }
+.spinner-j { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid rgba(245,166,35,.25); border-top-color: #f5a623; position: absolute; opacity: 0; animation: pv-spin .7s linear infinite; }
+.job-name-j { font-size: 10px; font-weight: 600; color: #71717a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90px; transition: color .3s; }
+.job-steps-j { padding: 4px 6px; display: flex; flex-direction: column; gap: 1px; }
+.step-row-j { display: flex; align-items: center; gap: 4px; padding: 2px 3px; border-radius: 3px; opacity: .25; transition: opacity .2s, background .2s; }
+.rc-dot-j { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.t-dot-j { width: 5px; height: 5px; border-radius: 1px; background: #3d3d3d; flex-shrink: 0; margin: 1px; }
+.g-dot-j { width: 7px; height: 7px; border-radius: 50%; border: 1.5px solid #fbbf24; background: transparent; flex-shrink: 0; }
+.step-lbl-j { font-size: 8px; color: #71717a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 96px; transition: color .2s; }
+
+/* Legend */
+.pv-legend { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 6px 14px; background: var(--surface-high); border-top: 1px solid var(--border); font-size: 9px; }
+.leg-t { color: var(--subtle); text-transform: uppercase; letter-spacing: .06em; }
+.leg-i { display: flex; align-items: center; gap: 4px; }
+.leg-d { width: 7px; height: 7px; border-radius: 2px; }
+.leg-d.rnd { border-radius: 50%; }
+.leg-i span { color: var(--subtle); }
+
+/* Animations */
+@keyframes pv-spin { to { transform: rotate(360deg); } }
+@keyframes pv-pulse { 0%,100% { opacity: 1; } 50% { opacity: .3; } }
