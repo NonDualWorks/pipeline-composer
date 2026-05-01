@@ -6,6 +6,7 @@ import { JobList } from './components/JobList'
 import { JobInspector } from './components/JobInspector'
 import { ZoneEditor } from './components/ZoneEditor'
 import { PipelineSelector } from './components/PipelineSelector'
+import { useStore } from './store'
 
 export default function App() {
   return (
@@ -16,7 +17,10 @@ export default function App() {
           <span className="nav-title">pipeline-composer</span>
           <span className="nav-badge">v0.1</span>
         </div>
-        <PipelineSelector />
+        <div className="nav-right">
+          <UndoRedo />
+          <PipelineSelector />
+        </div>
       </nav>
 
       <div className="app-layout">
@@ -29,6 +33,22 @@ export default function App() {
           <Preview />
         </main>
       </div>
+    </div>
+  )
+}
+
+function UndoRedo() {
+  const undo = () => useStore.temporal.getState().undo()
+  const redo = () => useStore.temporal.getState().redo()
+
+  return (
+    <div className="undo-redo">
+      <button className="btn btn-sm" onClick={undo} title="Undo (Cmd+Z)">
+        {'\u21A9'} undo
+      </button>
+      <button className="btn btn-sm" onClick={redo} title="Redo (Cmd+Shift+Z)">
+        redo {'\u21AA'}
+      </button>
     </div>
   )
 }

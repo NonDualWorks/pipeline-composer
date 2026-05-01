@@ -217,6 +217,10 @@ body {
 /* ─── Scenario selector ─── */
 .scenario-selector { display: flex; align-items: center; gap: 8px; }
 
+/* ─── Nav right group ─── */
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.undo-redo { display: flex; gap: 4px; }
+
 /* ─── Pipeline selector (nav) ─── */
 .pipeline-selector { display: flex; align-items: center; gap: 6px; }
 

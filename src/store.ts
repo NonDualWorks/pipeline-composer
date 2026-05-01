@@ -1,5 +1,6 @@
-// Pipeline Composer — Zustand store
+// Pipeline Composer — Zustand store with undo/redo (zundo temporal middleware)
 import { create } from 'zustand'
+import { temporal } from 'zundo'
 import type { Pipeline, Job } from './schema'
 import { PipelineSchema, createEmptyPipeline } from './schema'
 
@@ -38,71 +39,79 @@ function nextJobNum(jobs: Job[]): number {
   }, 0) + 1
 }
 
-export const useStore = create<ComposerState>((set) => ({
-  pipeline: createEmptyPipeline(),
-  selectedJobId: null,
-  speed: 1.0,
-  activeScenarioId: null,
+export const useStore = create<ComposerState>()(
+  temporal(
+    (set) => ({
+      pipeline: createEmptyPipeline(),
+      selectedJobId: null,
+      speed: 1.0,
+      activeScenarioId: null,
 
-  setPipeline: (p) => set({ pipeline: p, selectedJobId: null }),
+      setPipeline: (p) => set({ pipeline: p, selectedJobId: null }),
 
-  loadPipeline: (raw) => {
-    const result = PipelineSchema.safeParse(raw)
-    if (result.success) {
-      set({ pipeline: result.data, selectedJobId: null })
-      return result.data
-    }
-    console.error('Pipeline validation failed:', result.error)
-    return null
-  },
+      loadPipeline: (raw) => {
+        const result = PipelineSchema.safeParse(raw)
+        if (result.success) {
+          set({ pipeline: result.data, selectedJobId: null })
+          return result.data
+        }
+        console.error('Pipeline validation failed:', result.error)
+        return null
+      },
 
-  selectJob: (id) => set({ selectedJobId: id }),
-  setSpeed: (s) => set({ speed: s }),
-  setActiveScenario: (id) => set({ activeScenarioId: id }),
+      selectJob: (id) => set({ selectedJobId: id }),
+      setSpeed: (s) => set({ speed: s }),
+      setActiveScenario: (id) => set({ activeScenarioId: id }),
 
-  addJob: (job) => set(s => ({
-    pipeline: { ...s.pipeline, jobs: [...s.pipeline.jobs, job] },
-    selectedJobId: job.id,
-  })),
+      addJob: (job) => set(s => ({
+        pipeline: { ...s.pipeline, jobs: [...s.pipeline.jobs, job] },
+        selectedJobId: job.id,
+      })),
 
-  updateJob: (id, patch) => set(s => ({
-    pipeline: {
-      ...s.pipeline,
-      jobs: s.pipeline.jobs.map(j => j.id === id ? { ...j, ...patch } : j),
+      updateJob: (id, patch) => set(s => ({
+        pipeline: {
+          ...s.pipeline,
+          jobs: s.pipeline.jobs.map(j => j.id === id ? { ...j, ...patch } : j),
+        },
+      })),
+
+      removeJob: (id) => set(s => ({
+        pipeline: {
+          ...s.pipeline,
+          jobs: s.pipeline.jobs.filter(j => j.id !== id),
+        },
+        selectedJobId: s.selectedJobId === id ? null : s.selectedJobId,
+      })),
+
+      reorderJobs: (from, to) => set(s => {
+        const jobs = [...s.pipeline.jobs]
+        const [moved] = jobs.splice(from, 1)
+        jobs.splice(to, 0, moved)
+        return { pipeline: { ...s.pipeline, jobs } }
+      }),
+
+      updatePipelineMeta: (patch) => set(s => ({
+        pipeline: { ...s.pipeline, ...patch },
+      })),
+
+      addZone: (id, label, color) => set(s => ({
+        pipeline: { ...s.pipeline, zones: [...s.pipeline.zones, { id, label, color }] },
+      })),
+
+      removeZone: (id) => set(s => ({
+        pipeline: {
+          ...s.pipeline,
+          zones: s.pipeline.zones.filter(z => z.id !== id),
+          jobs: s.pipeline.jobs.map(j => j.zone === id ? { ...j, zone: null } : j),
+        },
+      })),
+    }),
+    {
+      partialize: (state) => ({ pipeline: state.pipeline }) as ComposerState,
+      limit: 50,
     },
-  })),
-
-  removeJob: (id) => set(s => ({
-    pipeline: {
-      ...s.pipeline,
-      jobs: s.pipeline.jobs.filter(j => j.id !== id),
-    },
-    selectedJobId: s.selectedJobId === id ? null : s.selectedJobId,
-  })),
-
-  reorderJobs: (from, to) => set(s => {
-    const jobs = [...s.pipeline.jobs]
-    const [moved] = jobs.splice(from, 1)
-    jobs.splice(to, 0, moved)
-    return { pipeline: { ...s.pipeline, jobs } }
-  }),
-
-  updatePipelineMeta: (patch) => set(s => ({
-    pipeline: { ...s.pipeline, ...patch },
-  })),
-
-  addZone: (id, label, color) => set(s => ({
-    pipeline: { ...s.pipeline, zones: [...s.pipeline.zones, { id, label, color }] },
-  })),
-
-  removeZone: (id) => set(s => ({
-    pipeline: {
-      ...s.pipeline,
-      zones: s.pipeline.zones.filter(z => z.id !== id),
-      jobs: s.pipeline.jobs.map(j => j.zone === id ? { ...j, zone: null } : j),
-    },
-  })),
-}))
+  ),
+)
 
 // Helper to create a new job with defaults
 export function createNewJob(existingJobs: Job[], name?: string): Job {
