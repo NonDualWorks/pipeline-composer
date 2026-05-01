@@ -118,10 +118,15 @@ function buildHTML(data: Pipeline): string {
     return gaps * ZONE_GAP
   }
 
-  // Layout calculations
-  const maxJH = Math.max(...jobs.map(j => jh(j)), JH_MIN)
-  const maxRows = Math.max(...cols.map(c => c.length), 1)
-  const innerH = maxRows * maxJH + (maxRows - 1) * RGAP
+  // Per-job heights
+  const jobH: Record<number, number> = {}
+  jobs.forEach((j, ji) => { jobH[ji] = jh(j) })
+
+  // Column heights using actual per-job sizes
+  const colHeights = cols.map(col =>
+    col.reduce((sum, { ji }) => sum + jobH[ji], 0) + Math.max(col.length - 1, 0) * RGAP
+  )
+  const innerH = Math.max(...colHeights, JH_MIN)
   const totalZoneGaps = zoneBreaks.length * ZONE_GAP
   const H = innerH + PY * 2 + ZONE_H
   const W = PX + RC * 2 + CGAP + cols.length * (JW + CGAP) + RC * 2 + PX + totalZoneGaps
@@ -129,12 +134,15 @@ function buildHTML(data: Pipeline): string {
   const srcX = PX + RC
   const srcY = ZONE_H + (innerH + PY * 2) / 2
 
-  // Job Y positions
+  // Job Y positions — cumulative per-job heights, centered in column
   const jobY: Record<number, number> = {}
-  cols.forEach((col, _ci) => {
-    const tH = col.length * maxJH + (col.length - 1) * RGAP
-    const sY = srcY - tH / 2
-    col.forEach(({ ji }, ri) => { jobY[ji] = sY + ri * (maxJH + RGAP) })
+  cols.forEach((col) => {
+    const colH = col.reduce((sum, { ji }) => sum + jobH[ji], 0) + Math.max(col.length - 1, 0) * RGAP
+    let currentY = srcY - colH / 2
+    col.forEach(({ ji }) => {
+      jobY[ji] = currentY
+      currentY += jobH[ji] + RGAP
+    })
   })
 
   // Job box HTML
@@ -169,7 +177,7 @@ function buildHTML(data: Pipeline): string {
     const cx = colX(ci)
     const isFanout = colType[ci] === 'fanout'
     col.forEach(({ job, ji }) => {
-      const jy = jobY[ji] + maxJH / 2
+      const jy = jobY[ji] + jobH[ji] / 2
       const fromX = ci === 0 ? srcX + RC : colX(ci) - CGAP / 2 + RC
       const fromY = srcY
       const mx = fromX + (cx - fromX) * 0.5
@@ -180,7 +188,7 @@ function buildHTML(data: Pipeline): string {
     if (ci < cols.length - 1 && !isFanout) {
       const mx = cx + JW + CGAP / 2
       col.forEach(({ job, ji }) => {
-        const jy = jobY[ji] + maxJH / 2
+        const jy = jobY[ji] + jobH[ji] / 2
         const bx = cx + JW + (mx - RC - (cx + JW)) * 0.5
         const d = `M ${cx + JW} ${jy} C ${bx} ${jy}, ${bx} ${srcY}, ${mx - RC} ${srcY}`
         pathsSVG += `<path data-conn-out="${job.name}" d="${d}" fill="none" stroke="#3d3d3d" stroke-width="2" stroke-dasharray="80" stroke-dashoffset="80"/>`
@@ -190,7 +198,7 @@ function buildHTML(data: Pipeline): string {
     } else {
       const tx = cx + JW + CGAP / 2
       col.forEach(({ job, ji }) => {
-        const jy = jobY[ji] + maxJH / 2
+        const jy = jobY[ji] + jobH[ji] / 2
         const bx = cx + JW + (tx - RC - (cx + JW)) * 0.5
         const d = `M ${cx + JW} ${jy} C ${bx} ${jy}, ${bx} ${srcY}, ${tx - RC} ${srcY}`
         pathsSVG += `<path data-conn-out="${job.name}" d="${d}" fill="none" stroke="#3d3d3d" stroke-width="2" stroke-dasharray="80" stroke-dashoffset="80"/>`

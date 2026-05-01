@@ -30,7 +30,13 @@ interface ComposerState {
   removeZone: (id: string) => void
 }
 
-let jobCounter = 1
+// Derives next ID from current pipeline jobs to avoid collisions
+function nextJobNum(jobs: Job[]): number {
+  return jobs.reduce((max, j) => {
+    const m = j.id.match(/^job-(\d+)$/)
+    return m ? Math.max(max, parseInt(m[1])) : max
+  }, 0) + 1
+}
 
 export const useStore = create<ComposerState>((set) => ({
   pipeline: createEmptyPipeline(),
@@ -99,11 +105,12 @@ export const useStore = create<ComposerState>((set) => ({
 }))
 
 // Helper to create a new job with defaults
-export function createNewJob(name?: string): Job {
-  const id = `job-${++jobCounter}`
+export function createNewJob(existingJobs: Job[], name?: string): Job {
+  const num = nextJobNum(existingJobs)
+  const id = `job-${num}`
   return {
     id,
-    name: name || `job-${jobCounter}`,
+    name: name || `job-${num}`,
     timing: 'steady',
     depends_on: [],
     parallelGroup: null,

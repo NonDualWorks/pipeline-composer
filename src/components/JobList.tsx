@@ -13,7 +13,7 @@ export function JobList() {
   const updateMeta = useStore(s => s.updatePipelineMeta)
 
   const handleAdd = () => {
-    const job = createNewJob()
+    const job = createNewJob(jobs)
     addJob(job)
   }
 
